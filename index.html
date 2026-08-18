@@ -2,189 +2,19 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
-<title>VITA UI TEST</title>
-<meta name="description" content="3D spatial social hub — avatars, profiles, rooms, visualizer, desk, themes, and the NZAIN AI assistant.">
-<meta name="theme-color" content="#0a0d12">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="VITA">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#bfe9ff">
+<meta name="description" content="VITA — a light Frutiger Aero 3D space to drift around.">
+<title>VITA — Aqua Hub</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="favicon-32.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-<div id="statusBar">
-  <div class="brand">
-    <svg viewBox="0 0 28 28" width="20" height="20">
-      <path d="M14 2.4l3.6 6.2h-7.2z" fill="none" stroke="#4FD675" stroke-width="1.4" stroke-linejoin="round"/>
-      <circle cx="24.2" cy="14" r="3.1" fill="none" stroke="#FF5C5C" stroke-width="1.4"/>
-      <path d="M11.7 19.9l4.5 4.5M16.2 19.9l-4.5 4.5" fill="none" stroke="#4FA3FF" stroke-width="1.4" stroke-linecap="round"/>
-      <rect x="1.4" y="10.9" width="6.5" height="6.5" fill="none" stroke="#FF6FD8" stroke-width="1.4"/>
-    </svg>
-    <span>VITA UI TEST</span>
-  </div>
-  <div class="statusRight">
-    <button class="syncChip" id="syncChip"><div class="syncDot" id="syncDot"></div><span>VITA SYNC</span></button>
-    <div class="clock" id="clock">00:00</div>
-  </div>
-</div>
-
-<canvas id="canvas3d"></canvas>
-
-<div class="profileCard" id="profileCard">
-  <div class="profileCardTop">
-    <h3 id="pcName">—</h3>
-    <button id="pcClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
-  </div>
-  <div class="pcUsername" id="pcUsername">@—</div>
-  <div class="profileBio" id="pcBio">—</div>
-  <div class="profileStats">
-    <div class="profileStat"><b id="pcPresence">—</b><span>PRESENCE</span></div>
-    <div class="profileStat"><b id="pcMood">—</b><span>MOOD</span></div>
-  </div>
-  <div class="profileRooms"><b>Hosted rooms —</b> <span id="pcRooms">—</span></div>
-  <button class="pcOpenBtn" id="pcOpen">Open full profile</button>
-</div>
-
-<div class="spatialInputOverlay" id="spatialOverlay">
-  <div class="spatialInputBox">
-    <p id="spatialPrompt">Add note</p>
-    <textarea id="spatialTextarea" spellcheck="false"></textarea>
-    <div class="spatialInputActions">
-      <button class="siCancel" id="siCancel">Cancel</button>
-      <button class="siConfirm" id="siConfirm">Save</button>
-    </div>
-  </div>
-</div>
-
-<div class="drawer" id="terminalDrawer">
-  <div class="drawerHead">
-    <h1>Terminal</h1>
-    <button id="closeTerminal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
-  </div>
-  <div class="drawerBody">
-    <div class="langRow" id="langRow"></div>
-    <div class="editorWrap"><textarea id="codeEditor" spellcheck="false"></textarea></div>
-    <div class="runRow">
-      <button class="runBtn" id="runBtn"><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8V4z" fill="currentColor"/></svg>RUN</button>
-      <button class="clearBtn" id="clearOutBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
-    </div>
-    <div class="outputLabel">OUTPUT</div>
-    <div class="outputBox" id="compilerOutput">Ready</div>
-  </div>
-</div>
-
-<div class="drawer" id="nzainDrawer">
-  <div class="drawerHead">
-    <h1>NZAIN</h1>
-    <button id="closeNzain"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
-  </div>
-  <div class="drawerBody">
-    <div class="nzainStatusText" id="nzainStatus">Neural Zen Artificial Implementation Network</div>
-    <div class="nzainRow">
-      <button class="circleBtn" id="micBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3z"/><path d="M6 11a6 6 0 0 0 12 0M12 19v3"/></svg></button>
-      <input id="nzainInput" placeholder="Ask NZAIN, or say it">
-      <button class="circleBtn active" id="voiceToggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M16 9a4 4 0 0 1 0 6"/></svg></button>
-      <button class="circleBtn sendBtn" id="nzainSend"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 12l16-8-6 16-3-7-7-1z"/></svg></button>
-    </div>
-    <div class="nzainHint">Responses speak aloud and appear as floating text above the NZAIN orb. Try: "spawn a room called Studio", "switch track to Cosmic Vibes", "focus on Luna", "make Kaze chill", or "add a note about the demo".</div>
-  </div>
-</div>
-
-<div class="drawer tall" id="profileDrawer">
-  <div class="drawerHead">
-    <h1>Profile</h1>
-    <button id="closeProfile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
-  </div>
-  <div class="drawerBody">
-    <div class="profileCover" id="pfCover">
-      <div class="pfName" id="pfName">—</div>
-      <div class="pfUsername" id="pfUsername">@—</div>
-    </div>
-    <div class="pfMetaRow">
-      <div class="pfMetaChip">Mood <b id="pfMoodChip">—</b></div>
-      <div class="pfMetaChip">Presence <b id="pfPresence">—</b></div>
-      <div class="pfMetaChip">Hosts <b id="pfHosted">—</b></div>
-    </div>
-    <div class="pfActions">
-      <button class="pfActionBtn" id="pfFriendBtn">Add friend</button>
-      <button class="pfActionBtn ghost" id="pfShare"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="18" cy="5" r="2.4"/><circle cx="6" cy="12" r="2.4"/><circle cx="18" cy="19" r="2.4"/><path d="M8.2 10.8l7.6-4.4M8.2 13.2l7.6 4.4"/></svg>Share</button>
-    </div>
-    <div class="pfSection"><h4>About</h4><div class="pfAbout" id="pfAbout">—</div></div>
-    <div class="pfSection"><h4>Interests</h4><div class="pfTags" id="pfInterests"></div></div>
-    <div class="pfSection"><h4>On rotation</h4><div id="pfMusic"></div></div>
-    <div class="pfSection"><h4>Top 8</h4><div class="top8Grid" id="pfTop8"></div></div>
-    <div class="pfSection"><h4>Set mood</h4><div class="moodRow" id="pfMoodRow"></div></div>
-    <div class="pfSection"><h4>Comments</h4>
-      <div class="commentForm">
-        <input id="pfCommentInput" placeholder="Leave a comment…">
-        <button id="pfCommentPost" title="Post comment"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 12l16-8-6 16-3-7-7-1z"/></svg></button>
-      </div>
-      <div id="pfComments"></div>
-    </div>
-    <div class="pfSection"><h4>Activity</h4><div class="activityList" id="pfActivity"></div></div>
-  </div>
-</div>
-
-<div class="drawer" id="themeDrawer">
-  <div class="drawerHead">
-    <h1>Themes</h1>
-    <button id="closeTheme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
-  </div>
-  <div class="drawerBody">
-    <div class="themeGrid" id="themeGrid"></div>
-    <div class="customEditor" id="customEditor">
-      <div class="customRow"><label>Background</label><input type="color" id="cust-bg"></div>
-      <div class="customRow"><label>Accent</label><input type="color" id="cust-accent"></div>
-      <div class="customRow"><label>Magenta</label><input type="color" id="cust-magenta"></div>
-      <div class="customRow"><label>Text</label><input type="color" id="cust-text"></div>
-    </div>
-    <button class="pfActionBtn ghost" id="themeShare">Copy theme link</button>
-    <p class="themeNote">Themes recolor the UI <b>and</b> the 3D space — background, grid, orb, visualizer, and desk. Custom colors apply live. Share a link to show off your work.</p>
-  </div>
-</div>
-
-<div class="vitaBubbles" aria-hidden="true"></div>
-<div class="vitaWaves" aria-hidden="true"><div class="wave w1"></div><div class="wave w2"></div><div class="wave w3"></div></div>
-
-<nav id="dock">
-  <button class="dockBtn active" data-view="hub">
-    <span class="vitaIcon hub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1.8"/><circle cx="5" cy="17" r="1.8"/><circle cx="19" cy="17" r="1.8"/><path d="M12 7 6.7 15.3M12 7l5.3 8.3M7.2 17h9.6"/></svg></span>
-    <span class="dockLabel">Hub</span>
-  </button>
-  <button class="dockBtn" data-view="profile">
-    <span class="vitaIcon profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c.8-3.4 3.7-5 7-5s6.2 1.6 7 5"/></svg></span>
-    <span class="dockLabel">People</span>
-  </button>
-  <button class="dockBtn" data-view="terminal">
-    <span class="vitaIcon terminal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 7 4 12l5 5M15 7l5 5-5 5"/></svg></span>
-    <span class="dockLabel">Code</span>
-  </button>
-  <button class="dockBtn" data-view="nzain">
-    <span class="vitaIcon nzain"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="2"/><circle cx="12" cy="12" r="6" stroke-dasharray="2 3"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2"/></svg></span>
-    <span class="dockLabel">AI</span>
-  </button>
-  <button class="dockBtn" data-view="theme">
-    <span class="vitaIcon theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 4a8 8 0 0 0 0 16c1.5 0 2-1 2-2 0-1.5-1.2-2-1.2-3.2 0-1 .8-1.8 2-1.8H17a4 4 0 0 0 4-4c0-3.3-4-5-9-5z"/><circle cx="7.5" cy="10.5" r=".9" fill="currentColor"/><circle cx="10.5" cy="7.5" r=".9" fill="currentColor"/><circle cx="14.5" cy="7.5" r=".9" fill="currentColor"/></svg></span>
-    <span class="dockLabel">Theme</span>
-  </button>
-</nav>
-
-<script src="themes.js"></script>
-<script src="social.js"></script>
+<div id="brand"><span>VITA</span></div>
+<div id="hint">drag to look &nbsp;&middot;&nbsp; W A S D to move</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="scene.js"></script>
-<script src="audio.js"></script>
-<script src="terminal.js"></script>
-<script src="voice.js"></script>
-<script src="nzain.js"></script>
-<script src="main.js"></script>
 </body>
 </html>

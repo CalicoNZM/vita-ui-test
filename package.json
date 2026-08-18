@@ -1,11 +1,10 @@
 {
   "name": "vita-ui-test",
-  "version": "1.0.0",
-  "description": "VITA UI TEST — 3D spatial hub. Runs as a PWA in any browser and as a native desktop app.",
+  "version": "2.0.0",
+  "description": "VITA — Aqua Hub. A light Frutiger Aero 3D space to drift around. PWA + Electron.",
   "main": "electron-main.js",
   "scripts": {
     "start": "electron .",
-    "server": "node server.js",
     "icons": "node make-icons.js"
   },
   "license": "UNLICENSED",
