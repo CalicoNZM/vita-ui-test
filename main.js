@@ -283,6 +283,7 @@ document.getElementById('siConfirm').addEventListener('click', () => {
   tickClock();
   setInterval(tickClock, 15000);
   document.getElementById('syncDot').classList.add('on');
+  spawnVitaBubbles();
   renderThemeDrawer();
   const prof = new URLSearchParams(location.search).get('profile');
   if (prof) {
@@ -290,3 +291,23 @@ document.getElementById('siConfirm').addEventListener('click', () => {
   }
   animate();
 })();
+
+function spawnVitaBubbles() {
+  const layer = document.querySelector('.vitaBubbles');
+  if (!layer) return;
+  const colors = ['rgba(53,224,192,', 'rgba(79,163,255,', 'rgba(255,111,216,', 'rgba(255,255,255,'];
+  for (let i = 0; i < 14; i++) {
+    const b = document.createElement('span');
+    b.className = 'vb';
+    const size = 6 + Math.random() * 16;
+    b.style.width = b.style.height = size + 'px';
+    b.style.left = (Math.random() * 100) + 'vw';
+    b.style.bottom = (-size - 12) + 'px';
+    b.style.animationDuration = (16 + Math.random() * 16) + 's';
+    b.style.animationDelay = (-Math.random() * 20) + 's';
+    const op = (0.05 + Math.random() * 0.10).toFixed(3);
+    b.style.background = 'radial-gradient(circle at 32% 30%, rgba(255,255,255,0.55), ' + colors[i % colors.length] + op + ')';
+    b.style.setProperty('--bop', op);
+    layer.appendChild(b);
+  }
+}

@@ -15,7 +15,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -152,12 +152,30 @@
   </div>
 </div>
 
+<div class="vitaBubbles" aria-hidden="true"></div>
+<div class="vitaWaves" aria-hidden="true"><div class="wave w1"></div><div class="wave w2"></div><div class="wave w3"></div></div>
+
 <nav id="dock">
-  <button class="dockBtn active" data-view="hub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="5" r="1.8"/><circle cx="5" cy="17" r="1.8"/><circle cx="19" cy="17" r="1.8"/><path d="M12 7 6.7 15.3M12 7l5.3 8.3M7.2 17h9.6"/></svg></button>
-  <button class="dockBtn" data-view="profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c.8-3.4 3.7-5 7-5s6.2 1.6 7 5"/></svg></button>
-  <button class="dockBtn" data-view="terminal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M9 7 4 12l5 5M15 7l5 5-5 5"/></svg></button>
-  <button class="dockBtn" data-view="nzain"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="2"/><circle cx="12" cy="12" r="6" stroke-dasharray="2 3"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2"/></svg></button>
-  <button class="dockBtn" data-view="theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 4a8 8 0 0 0 0 16c1.5 0 2-1 2-2 0-1.5-1.2-2-1.2-3.2 0-1 .8-1.8 2-1.8H17a4 4 0 0 0 4-4c0-3.3-4-5-9-5z"/><circle cx="7.5" cy="10.5" r=".9" fill="currentColor"/><circle cx="10.5" cy="7.5" r=".9" fill="currentColor"/><circle cx="14.5" cy="7.5" r=".9" fill="currentColor"/></svg></button>
+  <button class="dockBtn active" data-view="hub">
+    <span class="vitaIcon hub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1.8"/><circle cx="5" cy="17" r="1.8"/><circle cx="19" cy="17" r="1.8"/><path d="M12 7 6.7 15.3M12 7l5.3 8.3M7.2 17h9.6"/></svg></span>
+    <span class="dockLabel">Hub</span>
+  </button>
+  <button class="dockBtn" data-view="profile">
+    <span class="vitaIcon profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c.8-3.4 3.7-5 7-5s6.2 1.6 7 5"/></svg></span>
+    <span class="dockLabel">People</span>
+  </button>
+  <button class="dockBtn" data-view="terminal">
+    <span class="vitaIcon terminal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 7 4 12l5 5M15 7l5 5-5 5"/></svg></span>
+    <span class="dockLabel">Code</span>
+  </button>
+  <button class="dockBtn" data-view="nzain">
+    <span class="vitaIcon nzain"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="2"/><circle cx="12" cy="12" r="6" stroke-dasharray="2 3"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2"/></svg></span>
+    <span class="dockLabel">AI</span>
+  </button>
+  <button class="dockBtn" data-view="theme">
+    <span class="vitaIcon theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 4a8 8 0 0 0 0 16c1.5 0 2-1 2-2 0-1.5-1.2-2-1.2-3.2 0-1 .8-1.8 2-1.8H17a4 4 0 0 0 4-4c0-3.3-4-5-9-5z"/><circle cx="7.5" cy="10.5" r=".9" fill="currentColor"/><circle cx="10.5" cy="7.5" r=".9" fill="currentColor"/><circle cx="14.5" cy="7.5" r=".9" fill="currentColor"/></svg></span>
+    <span class="dockLabel">Theme</span>
+  </button>
 </nav>
 
 <script src="themes.js"></script>
