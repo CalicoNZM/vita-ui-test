@@ -1,5 +1,5 @@
-const CACHE = 'vita-cache-v1';
-const PRECACHE = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png', './favicon-32.png'];
+const CACHE = 'vita-cache-v2';
+const PRECACHE = ['./', './index.html', './manifest.webmanifest', './styles.css', './themes.js', './social.js', './scene.js', './audio.js', './terminal.js', './voice.js', './nzain.js', './main.js', './icon-192.png', './icon-512.png', './apple-touch-icon.png', './favicon-32.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(PRECACHE)).then(() => self.skipWaiting()));
