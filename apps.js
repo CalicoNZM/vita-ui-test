@@ -73,6 +73,44 @@
   tooltip.className = 'tooltip hidden';
   document.body.appendChild(tooltip);
 
+  var hudBtn = document.createElement('button');
+  hudBtn.className = 'hudToggle';
+  hudBtn.textContent = 'MAP';
+  hudBtn.title = 'Teleport';
+  document.body.appendChild(hudBtn);
+
+  var hud = document.createElement('div');
+  hud.className = 'hud';
+  document.body.appendChild(hud);
+  var hudOpen = false;
+  hudBtn.addEventListener('click', function () {
+    if (hudOpen) closeHud();
+    else openHud();
+  });
+
+  function openHud() {
+    hudOpen = true;
+    hud.classList.add('open');
+    hud.innerHTML = '<div class="hudTitle">islands</div>' +
+      '<button class="hudCard" data-t="home"><span class="hudDot" style="background:linear-gradient(135deg,#35e0c0,#4fa3ff)"></span>Home</button>' +
+      (window.islandList ? islandList().map(function (is) {
+        return '<button class="hudCard" data-t="' + is.id + '"><span class="hudDot" style="background:' + is.color + '"></span>' + is.name + '</button>';
+      }).join('') : '');
+    hud.querySelectorAll('.hudCard').forEach(function (c) {
+      c.addEventListener('click', function () {
+        teleportTo(c.getAttribute('data-t'));
+        closeHud();
+      });
+    });
+  }
+
+  function closeHud() {
+    hudOpen = false;
+    hud.classList.remove('open');
+    hud.innerHTML = '';
+  }
+  window.closeHud = closeHud;
+
   var paletteOpen = false;
   var decorSelected = 'rug';
   var currentApp = null;
@@ -330,7 +368,7 @@
 
   function renderGallery(body) {
     body.innerHTML =
-      '<div class="galRow"><button id="snapBtn" class="glossBtn big">&#128247; Snap photo</button><button id="galClear" class="glossBtn">Clear</button></div>' +
+      '<div class="galRow"><button id="snapBtn" class="glossBtn big">Snap photo</button><button id="galClear" class="glossBtn">Clear</button></div>' +
       '<div id="galGrid"></div>';
     var grid = document.getElementById('galGrid');
     var items = gallery.slice();

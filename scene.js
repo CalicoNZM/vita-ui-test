@@ -1,5 +1,5 @@
 var scene = new THREE.Scene();
-scene.fog = new THREE.Fog(0xbfe9ff, 55, 150);
+scene.fog = new THREE.Fog(0x9ad0f7, 70, 170);
 
 var renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
@@ -143,6 +143,30 @@ function handleClick(x, y) {
 document.addEventListener('visibilitychange', function () {
   if (!document.hidden && started && VITA.getTrack().paused) VITA.startMusic();
 });
+
+window.teleportTo = function (id) {
+  if (window.closePalette) closePalette();
+  if (id === 'home') {
+    dorm.active = false;
+    dorm.trans = { from: camPos.clone(), to: new THREE.Vector3(0, EYE, 26), t: 0 };
+    yaw = 0.6;
+    pitch = -0.08;
+    return;
+  }
+  var b = null;
+  for (var i = 0; i < bridges.length; i++) {
+    if (bridges[i].id === id) { b = bridges[i]; break; }
+  }
+  if (!b) return;
+  dorm.active = false;
+  dorm.trans = {
+    from: camPos.clone(),
+    to: new THREE.Vector3(b.bx, b.by + EYE, b.bz),
+    t: 0
+  };
+  yaw = Math.atan2(-b.dirX, -b.dirZ);
+  pitch = -0.06;
+};
 
 var clock = new THREE.Clock();
 var camPos = new THREE.Vector3(0, 1.7, 26);

@@ -155,3 +155,25 @@ body.ready #hint {
   border:1px solid rgba(255,255,255,0.9);box-shadow:0 4px 14px rgba(60,140,200,0.3);
   backdrop-filter:blur(6px);transform:translate(-50%,-100%);}
 .tooltip.hidden{display:none;}
+
+/* ===== 2.5D HUD ===== */
+.hudToggle{position:fixed;left:18px;bottom:20px;z-index:65;width:52px;height:52px;border-radius:15px;border:none;cursor:pointer;
+  font:700 12px 'Trebuchet MS',sans-serif;letter-spacing:1px;color:#1c5c8f;
+  background:linear-gradient(180deg,#fff,#dceefb);
+  box-shadow:0 6px 16px rgba(60,140,200,0.35), inset 0 1px 0 #fff;}
+.hudToggle:active{transform:scale(0.94);}
+.hud{position:fixed;left:82px;bottom:20px;z-index:64;width:232px;display:none;
+  transform:perspective(900px) rotateX(12deg) rotateY(-5deg);transform-origin:left bottom;
+  background:linear-gradient(180deg,rgba(255,255,255,0.93),rgba(228,244,255,0.9));
+  border:1px solid rgba(255,255,255,0.92);border-radius:18px;
+  box-shadow:0 16px 42px rgba(60,140,200,0.38);backdrop-filter:blur(14px);padding:14px;}
+.hud.open{display:block;}
+.hudTitle{font:700 10px 'Trebuchet MS',sans-serif;letter-spacing:2.5px;color:#7fa6c4;margin-bottom:10px;text-transform:uppercase;}
+.hudCard{display:flex;align-items:center;gap:10px;width:100%;border:none;cursor:pointer;
+  background:rgba(255,255,255,0.65);border:1px solid rgba(120,180,220,0.35);
+  border-radius:12px;padding:9px 11px;margin-bottom:8px;
+  font:600 13px 'Trebuchet MS',sans-serif;color:#1c5c8f;text-align:left;
+  transition:transform .15s, background .15s, color .15s;}
+.hudCard .hudDot{width:16px;height:16px;border-radius:50%;flex-shrink:0;box-shadow:0 2px 6px rgba(30,90,140,0.3);}
+.hudCard:hover{transform:translateZ(8px);background:linear-gradient(135deg,#35e0c0,#4fa3ff);color:#fff;border-color:transparent;}
+.hudCard:hover .hudDot{box-shadow:0 2px 6px rgba(255,255,255,0.5);}

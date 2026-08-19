@@ -187,12 +187,12 @@
           map: makeGlowTexture(),
           color: new THREE.Color(accent),
           transparent: true,
-          opacity: 0.55,
+          opacity: 0.8,
           blending: THREE.AdditiveBlending,
           depthWrite: false
         })
       );
-      glow.scale.set(3.4, 3.4, 1);
+      glow.scale.set(4, 4, 1);
       glow.position.y = 4.8 * s;
       g.add(glow);
     }
@@ -205,11 +205,11 @@
   var appIslands = [];
   function buildAppIslands() {
     var apps = [
-      { id: 'music', name: 'Music', x: 0, y: 22, z: -42, grass: 0x9adf7a, accent: '#ff8fb8', icon: 'note', s: 1.5 },
-      { id: 'notes', name: 'Notes', x: 42, y: 18, z: 2, grass: 0xc9e86a, accent: '#ffd166', icon: 'chat', s: 1.5 },
-      { id: 'gallery', name: 'Gallery', x: 30, y: 26, z: 32, grass: 0x6fd0e8, accent: '#4fa3ff', icon: 'photo', s: 1.6 },
-      { id: 'timer', name: 'Timer', x: -30, y: 20, z: 30, grass: 0x8fe3c0, accent: '#35e0c0', icon: 'clock', s: 1.5 },
-      { id: 'game', name: 'Bubbles', x: -40, y: 24, z: -28, grass: 0xffd98a, accent: '#ff9a4d', icon: 'star', s: 1.6 }
+      { id: 'music', name: 'Music', x: 0, y: 22, z: -42, grass: 0xff8fa8, accent: '#ff5c7a', icon: 'note', s: 1.5 },
+      { id: 'notes', name: 'Notes', x: 42, y: 18, z: 2, grass: 0xf0e354, accent: '#ffc400', icon: 'chat', s: 1.5 },
+      { id: 'gallery', name: 'Gallery', x: 30, y: 26, z: 32, grass: 0x4fa3ff, accent: '#4fa3ff', icon: 'photo', s: 1.6 },
+      { id: 'timer', name: 'Timer', x: -30, y: 20, z: 30, grass: 0x35e0c0, accent: '#12b891', icon: 'clock', s: 1.5 },
+      { id: 'game', name: 'Bubbles', x: -40, y: 24, z: -28, grass: 0xff9a4d, accent: '#ff6b1a', icon: 'star', s: 1.6 }
     ];
     var self = this;
     apps.forEach(function (a) {
@@ -364,7 +364,7 @@
 
   function buildDorm() {
     loadDorm();
-    dormIsland = makeIsland(0, DORM_Y, 0, 3.4, 0x8fe3c0, '#7ad3ff', null, null);
+    dormIsland = makeIsland(0, DORM_Y, 0, 3.4, 0x4ad6b0, '#12b891', null, null);
 
     var hut = new THREE.Group();
     hutWalls = new THREE.Mesh(
@@ -521,7 +521,7 @@
     var r = 0.5 + Math.random() * 0.7;
     var m = new THREE.Mesh(
       new THREE.SphereGeometry(r, 20, 20),
-      new THREE.MeshStandardMaterial({ color: 0xbfe9ff, transparent: true, opacity: 0.55, roughness: 0.05, metalness: 0.15, depthWrite: false })
+      new THREE.MeshStandardMaterial({ color: 0x7fc9ff, transparent: true, opacity: 0.7, roughness: 0.05, metalness: 0.15, depthWrite: false })
     );
     var a = Math.random() * Math.PI * 2;
     var rr = 7 + Math.random() * 16;
@@ -625,9 +625,9 @@
 
   function buildBridges() {
     var targets = appIslands.map(function (is) {
-      return { x: is.app.x, z: is.app.z, y: is.baseY, edge: 6.5 * is.app.s };
+      return { id: is.app.id, name: is.app.name, x: is.app.x, z: is.app.z, y: is.baseY, edge: 6.5 * is.app.s };
     });
-    targets.push({ x: 0, z: 0, y: DORM_Y, edge: 8 });
+    targets.push({ id: 'dorm', name: 'My Dorm', x: 0, z: 0, y: DORM_Y, edge: 8 });
 
     targets.forEach(function (t) {
       var dir = t.x === 0 && t.z === 0 ? { x: -0.7, z: 0.7 } : (function () {
@@ -673,7 +673,9 @@
       }
 
       bridges.push({
+        id: t.id,
         ax: sx, az: sz, bx: ex, bz: ez, ay: 0.5, by: ey,
+        dirX: dir.x, dirZ: dir.z,
         width: 2.6
       });
     });
@@ -697,6 +699,13 @@
 
   window.buildBridges = buildBridges;
   window.bridgeFloor = bridgeFloor;
+  window.islandList = function () {
+    var list = appIslands.map(function (is) {
+      return { id: is.app.id, name: is.app.name, color: is.app.accent };
+    });
+    list.push({ id: 'dorm', name: 'My Dorm', color: '#12b891' });
+    return list;
+  };
   window.buildAppIslands = buildAppIslands;
   window.buildDorm = buildDorm;
   window.buildGame = buildGame;

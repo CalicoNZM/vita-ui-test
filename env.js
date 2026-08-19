@@ -7,10 +7,10 @@
     c.height = 512;
     var g = c.getContext('2d');
     var grad = g.createLinearGradient(0, 0, 0, 512);
-    grad.addColorStop(0, '#9fd8ff');
-    grad.addColorStop(0.55, '#c8ecff');
-    grad.addColorStop(0.78, '#e6f7ff');
-    grad.addColorStop(1, '#bfe9ff');
+    grad.addColorStop(0, '#5fa6e8');
+    grad.addColorStop(0.55, '#8fc8f2');
+    grad.addColorStop(0.78, '#b0ddfa');
+    grad.addColorStop(1, '#9ad0f7');
     g.fillStyle = grad;
     g.fillRect(0, 0, 2, 512);
     var tex = new THREE.CanvasTexture(c);
@@ -20,6 +20,23 @@
   }
 
   window.makeSkyTexture = makeSkyTexture;
+
+  function makeEnvSkyTexture() {
+    var c = document.createElement('canvas');
+    c.width = 2;
+    c.height = 512;
+    var g = c.getContext('2d');
+    var grad = g.createLinearGradient(0, 0, 0, 512);
+    grad.addColorStop(0, '#3d82c4');
+    grad.addColorStop(0.6, '#74b8e8');
+    grad.addColorStop(1, '#9ad0f7');
+    g.fillStyle = grad;
+    g.fillRect(0, 0, 2, 512);
+    var tex = new THREE.CanvasTexture(c);
+    tex.magFilter = THREE.LinearFilter;
+    tex.minFilter = THREE.LinearFilter;
+    return tex;
+  }
 
   function makeGlowTexture() {
     var c = document.createElement('canvas');
@@ -54,45 +71,45 @@
         map: makeGlowTexture(),
         color: 0xe8f8ff,
         transparent: true,
-        opacity: 0.85,
+        opacity: 0.3,
         blending: THREE.AdditiveBlending,
         depthWrite: false
       })
     );
-    glow.scale.set(70, 70, 1);
+    glow.scale.set(40, 40, 1);
     glow.position.copy(sunPos);
     scene.add(glow);
 
     var ground = new THREE.Mesh(
       new THREE.CircleGeometry(140, 48),
-      new THREE.MeshStandardMaterial({ color: 0x8fd0f5, metalness: 0.15, roughness: 0.2 })
+      new THREE.MeshStandardMaterial({ color: 0x3a9dd4, metalness: 0.05, roughness: 0.55, envMapIntensity: 0.4 })
     );
     ground.rotation.x = -Math.PI / 2;
     scene.add(ground);
 
     var pool = new THREE.Mesh(
       new THREE.CircleGeometry(60, 48),
-      new THREE.MeshStandardMaterial({ color: 0x9fdcff, metalness: 0.1, roughness: 0.12, transparent: true, opacity: 0.75 })
+      new THREE.MeshStandardMaterial({ color: 0x2e8fc8, metalness: 0.05, roughness: 0.35, transparent: true, opacity: 0.9, envMapIntensity: 0.3 })
     );
     pool.rotation.x = -Math.PI / 2;
     pool.position.y = 0.03;
     scene.add(pool);
 
-    scene.add(new THREE.HemisphereLight(0xffffff, 0x8fd0ff, 0.95));
-    var dl = new THREE.DirectionalLight(0xffffff, 0.7);
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x2e6fa3, 0.5));
+    var dl = new THREE.DirectionalLight(0xfff0da, 0.65);
     dl.position.set(50, 90, -40);
     scene.add(dl);
-    scene.add(new THREE.AmbientLight(0xffffff, 0.3));
+    scene.add(new THREE.AmbientLight(0xffffff, 0.18));
 
     var pmrem = new THREE.PMREMGenerator(renderer);
     (function () {
       var es = new THREE.Scene();
       var dom = new THREE.Mesh(
         new THREE.SphereGeometry(50, 16, 12),
-        new THREE.MeshBasicMaterial({ map: makeSkyTexture(), side: THREE.BackSide })
+        new THREE.MeshBasicMaterial({ map: makeEnvSkyTexture(), side: THREE.BackSide })
       );
       es.add(dom);
-      var sg = new THREE.Mesh(new THREE.CircleGeometry(14, 24), new THREE.MeshBasicMaterial({ color: 0xffffff }));
+      var sg = new THREE.Mesh(new THREE.CircleGeometry(8, 24), new THREE.MeshBasicMaterial({ color: 0x8fc8f2 }));
       sg.position.copy(sunPos).normalize().multiplyScalar(44);
       sg.lookAt(0, 0, 0);
       es.add(sg);
@@ -101,7 +118,7 @@
 
     var clouds = [];
     (function () {
-      var mat = new THREE.MeshStandardMaterial({ color: 0xffffff, transparent: true, opacity: 0.92, roughness: 1, metalness: 0, flatShading: true });
+      var mat = new THREE.MeshStandardMaterial({ color: 0xffffff, transparent: true, opacity: 0.8, roughness: 1, metalness: 0, flatShading: true });
       var puffs = [[0, 0, 0, 1], [1.1, 0.15, 0.3, 0.72], [-1.1, 0.1, -0.2, 0.68], [0.5, 0.28, -0.7, 0.55], [-0.4, 0.3, 0.7, 0.5]];
       for (var c = 0; c < 8; c++) {
         var g = new THREE.Group();
@@ -122,9 +139,9 @@
     var rays = new THREE.Group();
     (function () {
       var rayMat = new THREE.MeshBasicMaterial({
-        color: 0xffffff,
+        color: 0xdff0ff,
         transparent: true,
-        opacity: 0.045,
+        opacity: 0.03,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
         side: THREE.DoubleSide
@@ -147,11 +164,12 @@
       var mesh = new THREE.Mesh(
         new THREE.SphereGeometry(r, 32, 32),
         new THREE.MeshStandardMaterial({
-          color: new THREE.Color().setHSL(0.55 + Math.random() * 0.1, 0.55, 0.8),
+          color: new THREE.Color().setHSL(0.55 + Math.random() * 0.1, 0.75, 0.68),
           transparent: true,
-          opacity: 0.22 + Math.random() * 0.16,
+          opacity: 0.35 + Math.random() * 0.18,
           roughness: 0.05,
           metalness: 0.1,
+          envMapIntensity: 1.2,
           depthWrite: false
         })
       );
