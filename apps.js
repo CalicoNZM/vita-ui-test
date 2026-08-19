@@ -167,11 +167,13 @@
 
   function openPalette() {
     paletteOpen = true;
+    flyMode = true;
     palette.classList.remove('hidden');
     palette.innerHTML = '<span class="dpTitle">Place things in your dorm</span>' +
       DECOR_TYPES.map(function (t) {
         return '<button class="dpItem' + (t === decorSelected ? ' sel' : '') + '" data-t="' + t + '">' + t + '</button>';
       }).join('') +
+      '<button class="dpAct" id="dpFly">Fly: on</button>' +
       '<button class="dpAct" id="dpClear">Clear all</button>' +
       '<button class="dpAct" id="dpLeave">Leave room</button>';
     palette.querySelectorAll('.dpItem').forEach(function (b) {
@@ -180,6 +182,10 @@
         palette.querySelectorAll('.dpItem').forEach(function (x) { x.classList.remove('sel'); });
         b.classList.add('sel');
       });
+    });
+    document.getElementById('dpFly').addEventListener('click', function () {
+      flyMode = !flyMode;
+      this.textContent = 'Fly: ' + (flyMode ? 'on' : 'off');
     });
     document.getElementById('dpClear').addEventListener('click', function () {
       clearDecor();
@@ -191,6 +197,7 @@
   }
   function closePalette() {
     paletteOpen = false;
+    flyMode = false;
     palette.classList.add('hidden');
     palette.innerHTML = '';
   }

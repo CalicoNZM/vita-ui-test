@@ -13,7 +13,7 @@ buildEnvironment();
 buildAppIslands();
 buildDorm();
 buildGame();
-buildBridges();
+buildElevators();
 
 var keys = {};
 var started = false;
@@ -38,7 +38,8 @@ var yaw = 0.6,
   pitch = -0.08,
   dragging = false,
   lx = 0,
-  ly = 0;
+  ly = 0,
+  flyMode = false;
 
 renderer.domElement.addEventListener('pointerdown', function (e) {
   dragging = true;
@@ -153,18 +154,15 @@ window.teleportTo = function (id) {
     pitch = -0.08;
     return;
   }
-  var b = null;
-  for (var i = 0; i < bridges.length; i++) {
-    if (bridges[i].id === id) { b = bridges[i]; break; }
-  }
-  if (!b) return;
+  var ev = elevatorTop(id);
+  if (!ev) return;
   dorm.active = false;
   dorm.trans = {
     from: camPos.clone(),
-    to: new THREE.Vector3(b.bx, b.by + EYE, b.bz),
+    to: new THREE.Vector3(ev.cx, ev.topY + EYE, ev.cz),
     t: 0
   };
-  yaw = Math.atan2(-b.dirX, -b.dirZ);
+  yaw = ev.yaw;
   pitch = -0.06;
 };
 
@@ -182,13 +180,17 @@ function animate() {
   if (moving) {
     var fwd = (keys.KeyW || keys.ArrowUp ? 1 : 0) - (keys.KeyS || keys.ArrowDown ? 1 : 0);
     var str = (keys.KeyD || keys.ArrowRight ? 1 : 0) - (keys.KeyA || keys.ArrowLeft ? 1 : 0);
-    var sp = 11;
+    var sp = flyMode ? 16 : 11;
     var fx = Math.sin(yaw),
       fz = Math.cos(yaw);
-    var rx = Math.cos(yaw),
-      rz = -Math.sin(yaw);
+    var rx = -Math.cos(yaw),
+      rz = Math.sin(yaw);
     camPos.x += (fx * fwd + rx * str) * sp * dt;
     camPos.z += (fz * fwd + rz * str) * sp * dt;
+    if (flyMode) {
+      var cl = (keys.Space ? 1 : 0) - (keys.ShiftLeft || keys.ShiftRight || keys.KeyC ? 1 : 0);
+      camPos.y += cl * sp * 0.8 * dt;
+    }
   }
 
   var rr = camPos.x * camPos.x + camPos.z * camPos.z;
@@ -203,6 +205,21 @@ function animate() {
     var k = dorm.trans.t * dorm.trans.t * (3 - 2 * dorm.trans.t);
     camPos.lerpVectors(dorm.trans.from, dorm.trans.to, k);
     if (dorm.trans.t >= 1) dorm.trans = null;
+  } else if (flyMode) {
+    if (dorm.active) {
+      var fdx = camPos.x,
+        fdz = camPos.z;
+      var fd = Math.hypot(fdx, fdz);
+      if (fd > 12) {
+        camPos.x = fdx / fd * 12;
+        camPos.z = fdz / fd * 12;
+      }
+      if (camPos.y < DORM_Y + 0.6) camPos.y = DORM_Y + 0.6;
+      if (camPos.y > DORM_Y + 9) camPos.y = DORM_Y + 9;
+    } else {
+      if (camPos.y < 1.5) camPos.y = 1.5;
+      if (camPos.y > 60) camPos.y = 60;
+    }
   } else if (dorm.active) {
     var cdx = camPos.x,
       cdz = camPos.z;
@@ -213,7 +230,7 @@ function animate() {
     }
     camPos.y += (DORM_Y + EYE - camPos.y) * dt * 3;
   } else {
-    var fh = bridgeFloor(camPos.x, camPos.z);
+    var fh = surfaceHeight(camPos.x, camPos.z);
     var targetY = fh !== null ? fh + EYE : EYE + Math.sin(t * 0.9) * 0.15;
     camPos.y += (targetY - camPos.y) * dt * (fh !== null ? 6 : 2);
   }

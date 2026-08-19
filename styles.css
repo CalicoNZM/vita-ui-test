@@ -156,24 +156,25 @@ body.ready #hint {
   backdrop-filter:blur(6px);transform:translate(-50%,-100%);}
 .tooltip.hidden{display:none;}
 
-/* ===== 2.5D HUD ===== */
-.hudToggle{position:fixed;left:18px;bottom:20px;z-index:65;width:52px;height:52px;border-radius:15px;border:none;cursor:pointer;
-  font:700 12px 'Trebuchet MS',sans-serif;letter-spacing:1px;color:#1c5c8f;
-  background:linear-gradient(180deg,#fff,#dceefb);
-  box-shadow:0 6px 16px rgba(60,140,200,0.35), inset 0 1px 0 #fff;}
+/* ===== 2.5D HUD (dark aero) ===== */
+.hudToggle{position:fixed;left:18px;bottom:20px;z-index:65;width:52px;height:52px;border-radius:15px;border:1px solid rgba(150,195,255,0.55);cursor:pointer;
+  font:700 12px 'Trebuchet MS',sans-serif;letter-spacing:1px;color:#cfe4ff;
+  background:linear-gradient(180deg,rgba(255,255,255,0.4),rgba(150,190,255,0.16) 45%,rgba(16,32,66,0.55) 46%,rgba(10,22,50,0.82));
+  box-shadow:0 10px 24px rgba(0,20,60,0.55), inset 0 1px 0 rgba(255,255,255,0.4), inset 0 -12px 18px rgba(70,130,230,0.18);}
 .hudToggle:active{transform:scale(0.94);}
 .hud{position:fixed;left:82px;bottom:20px;z-index:64;width:232px;display:none;
   transform:perspective(900px) rotateX(12deg) rotateY(-5deg);transform-origin:left bottom;
-  background:linear-gradient(180deg,rgba(255,255,255,0.93),rgba(228,244,255,0.9));
-  border:1px solid rgba(255,255,255,0.92);border-radius:18px;
-  box-shadow:0 16px 42px rgba(60,140,200,0.38);backdrop-filter:blur(14px);padding:14px;}
+  background:linear-gradient(180deg,rgba(46,82,140,0.9),rgba(8,18,42,0.94));
+  border:1px solid rgba(150,195,255,0.45);border-radius:18px;
+  box-shadow:0 20px 55px rgba(0,10,40,0.65), inset 0 1px 0 rgba(255,255,255,0.28), inset 0 0 40px rgba(70,140,255,0.08);
+  backdrop-filter:blur(16px);padding:14px;}
 .hud.open{display:block;}
-.hudTitle{font:700 10px 'Trebuchet MS',sans-serif;letter-spacing:2.5px;color:#7fa6c4;margin-bottom:10px;text-transform:uppercase;}
-.hudCard{display:flex;align-items:center;gap:10px;width:100%;border:none;cursor:pointer;
-  background:rgba(255,255,255,0.65);border:1px solid rgba(120,180,220,0.35);
-  border-radius:12px;padding:9px 11px;margin-bottom:8px;
-  font:600 13px 'Trebuchet MS',sans-serif;color:#1c5c8f;text-align:left;
+.hudTitle{font:700 10px 'Trebuchet MS',sans-serif;letter-spacing:2.5px;color:#9fc2f0;margin-bottom:10px;text-transform:uppercase;text-shadow:0 1px 2px rgba(0,0,0,0.6);}
+.hudCard{display:flex;align-items:center;gap:10px;width:100%;border:1px solid rgba(150,195,255,0.35);cursor:pointer;
+  background:rgba(30,55,110,0.5);border-radius:12px;padding:9px 11px;margin-bottom:8px;
+  font:600 13px 'Trebuchet MS',sans-serif;color:#dce9ff;text-align:left;text-shadow:0 1px 2px rgba(0,0,0,0.5);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.12);
   transition:transform .15s, background .15s, color .15s;}
-.hudCard .hudDot{width:16px;height:16px;border-radius:50%;flex-shrink:0;box-shadow:0 2px 6px rgba(30,90,140,0.3);}
-.hudCard:hover{transform:translateZ(8px);background:linear-gradient(135deg,#35e0c0,#4fa3ff);color:#fff;border-color:transparent;}
+.hudCard .hudDot{width:16px;height:16px;border-radius:50%;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,0.45), 0 0 8px rgba(120,180,255,0.5);}
+.hudCard:hover{transform:translateZ(8px);background:linear-gradient(135deg,#35e0c0,#4fa3ff);color:#fff;border-color:transparent;text-shadow:none;}
 .hudCard:hover .hudDot{box-shadow:0 2px 6px rgba(255,255,255,0.5);}

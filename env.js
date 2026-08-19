@@ -244,7 +244,7 @@
 
     var blades = [];
     (function () {
-      var bladeMat = new THREE.MeshStandardMaterial({ color: 0x7fce6b, roughness: 0.85 });
+      var bladeMat = new THREE.MeshStandardMaterial({ color: 0x3aa85a, roughness: 0.85 });
       var bladeGeo = new THREE.ConeGeometry(0.09, 0.55, 4);
       for (var i = 0; i < 90; i++) {
         var m = new THREE.Mesh(bladeGeo, bladeMat);

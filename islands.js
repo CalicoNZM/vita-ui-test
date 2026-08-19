@@ -167,7 +167,7 @@
     g.add(trunk);
     var leaf = new THREE.Mesh(
       new THREE.SphereGeometry(0.75 * s, 8, 8),
-      new THREE.MeshStandardMaterial({ color: 0x6cc45c, roughness: 0.7 })
+      new THREE.MeshStandardMaterial({ color: 0x2f9e4e, roughness: 0.7 })
     );
     leaf.position.set(1.3 * s, 1.85 * s, 0.4 * s);
     g.add(leaf);
@@ -224,7 +224,7 @@
       });
     });
 
-    var coords = [[-52, 34, 40, 1.4, 0x9adf7a], [46, 30, -48, 1.7, 0xc9e86a]];
+    var coords = [[-52, 34, 40, 1.4, 0x4cbb64], [46, 30, -48, 1.7, 0x54c96f]];
     coords.forEach(function (c) {
       makeIsland(c[0], c[1], c[2], c[3], c[4], '#ffffff', null, null);
     });
@@ -301,7 +301,7 @@
         for (var i = 0; i < 4; i++) {
           var leaf = new THREE.Mesh(
             new THREE.SphereGeometry(0.18, 8, 8),
-            new THREE.MeshStandardMaterial({ color: 0x6cc45c, roughness: 0.6 })
+            new THREE.MeshStandardMaterial({ color: 0x2f9e4e, roughness: 0.6 })
           );
           leaf.position.set(Math.sin(i * 1.7) * 0.22, 0.55 + i * 0.07, Math.cos(i * 1.3) * 0.22);
           g.add(leaf);
@@ -568,9 +568,7 @@
 
   function updateIslands(t, dt) {
     for (var i = 0; i < appIslands.length; i++) {
-      var is = appIslands[i];
-      is.g.position.y = is.baseY + Math.sin(t * 0.4 + is.ph) * is.amp;
-      is.g.rotation.y += dt * 0.03;
+      appIslands[i].g.rotation.y += dt * 0.03;
     }
 
     for (var p = 0; p < popBubbles.length; p++) {
@@ -582,8 +580,20 @@
 
     for (var a = 0; a < arrows.length; a++) {
       var ar = arrows[a];
-      ar.g.position.y += Math.sin(t * 2.2 + ar.ph) * dt * 0.6;
+      ar.g.position.y = ar.base + Math.sin(t * 2 + ar.ph) * 0.14;
       ar.mat.emissiveIntensity = 0.45 + Math.sin(t * 3 + ar.ph) * 0.25;
+    }
+
+    for (var el = 0; el < window.elevators.length; el++) {
+      var ev = window.elevators[el];
+      var pr = Math.hypot(camPos.x - ev.cx, camPos.z - ev.cz);
+      var riding = pr < ev.radius + 0.4;
+      var atTop = pr < ev.radius + 1.4 && Math.abs(camPos.y - ev.topY) < 3;
+      var target = (riding || atTop) ? ev.topY : ev.baseY;
+      ev.currentY += (target - ev.currentY) * dt * 1.6;
+      ev.disc.position.y = ev.currentY;
+      ev.ring.position.y = ev.currentY + 0.2;
+      ev.glow.material.opacity = 0.45 + Math.sin(t * 2 + el) * 0.15;
     }
 
     for (var b = bursts.length - 1; b >= 0; b--) {
@@ -620,85 +630,70 @@
     return { group: g, mat: mat };
   }
 
-  window.bridges = [];
+  window.elevators = [];
   var arrows = [];
 
-  function buildBridges() {
+  function buildElevators() {
     var targets = appIslands.map(function (is) {
-      return { id: is.app.id, name: is.app.name, x: is.app.x, z: is.app.z, y: is.baseY, edge: 6.5 * is.app.s };
+      var l = Math.hypot(is.app.x, is.app.z);
+      return { id: is.app.id, x: is.app.x, z: is.app.z, y: is.baseY, accent: is.app.accent, yaw: Math.atan2(-is.app.x / l, -is.app.z / l) };
     });
-    targets.push({ id: 'dorm', name: 'My Dorm', x: 0, z: 0, y: DORM_Y, edge: 8 });
-
-    targets.forEach(function (t) {
-      var dir = t.x === 0 && t.z === 0 ? { x: -0.7, z: 0.7 } : (function () {
-        var l = Math.hypot(t.x, t.z);
-        return { x: t.x / l, z: t.z / l };
-      })();
-      var sx = dir.x * 23, sz = dir.z * 23;
-      var ex = t.x + dir.x * t.edge, ez = t.z + dir.z * t.edge;
-      var ey = t.y + 0.45;
-
-      var hdx = ex - sx, hdz = ez - sz;
-      var hlen = Math.hypot(hdx, hdz);
-      var dy = ey - 0.5;
-
-      var plank = new THREE.Mesh(
-        new THREE.BoxGeometry(5, 0.16, hlen),
-        new THREE.MeshStandardMaterial({ color: 0xc9e9ff, transparent: true, opacity: 0.72, roughness: 0.3, metalness: 0.1 })
-      );
-      plank.position.set((sx + ex) / 2, (0.5 + ey) / 2, (sz + ez) / 2);
-      plank.rotation.y = Math.atan2(hdx, hdz);
-      plank.rotation.x = -Math.atan2(dy, hlen);
-      scene.add(plank);
-
-      var plat = new THREE.Mesh(
-        new THREE.CylinderGeometry(3.4, 3.6, 0.3, 20),
-        new THREE.MeshStandardMaterial({ color: 0xc9e9ff, transparent: true, opacity: 0.85, roughness: 0.3, metalness: 0.1 })
-      );
-      plat.position.set(sx, 0.15, sz);
-      scene.add(plat);
-
-      var baseArrow = makeArrow(1.1);
-      baseArrow.group.position.set(sx, 2.6, sz);
-      baseArrow.group.rotation.y = Math.atan2(dir.x, dir.z);
-      scene.add(baseArrow.group);
-      arrows.push({ g: baseArrow.group, mat: baseArrow.mat, ph: Math.random() * Math.PI * 2, k: 1 });
-
-      for (var k = 0.25; k <= 0.75; k += 0.25) {
-        var chev = makeArrow(0.55);
-        chev.group.position.set(sx + hdx * k, 0.5 + dy * k + 0.55, sz + hdz * k);
-        chev.group.rotation.y = Math.atan2(dir.x, dir.z);
-        scene.add(chev.group);
-        arrows.push({ g: chev.group, mat: chev.mat, ph: Math.random() * Math.PI * 2, k: k });
-      }
-
-      bridges.push({
-        id: t.id,
-        ax: sx, az: sz, bx: ex, bz: ez, ay: 0.5, by: ey,
-        dirX: dir.x, dirZ: dir.z,
-        width: 2.6
-      });
-    });
+    targets.push({ id: 'dorm', x: 0, z: 0, y: DORM_Y, accent: '#12b891', yaw: 0 });
+    targets.forEach(makeElevator);
   }
 
-  function bridgeFloor(x, z) {
-    var best = null;
-    for (var i = 0; i < bridges.length; i++) {
-      var b = bridges[i];
-      var dx = b.bx - b.ax, dz = b.bz - b.az;
-      var len2 = dx * dx + dz * dz;
-      var t = Math.max(0, Math.min(1, ((x - b.ax) * dx + (z - b.az) * dz) / len2));
-      var px = b.ax + dx * t, pz = b.az + dz * t;
-      if (Math.hypot(x - px, z - pz) <= b.width) {
-        var h = b.ay + (b.by - b.ay) * t;
-        if (best === null || h > best) best = h;
-      }
+  function makeElevator(t) {
+    var baseY = 0.5, topY = t.y + 0.45;
+    var disc = new THREE.Mesh(
+      new THREE.CylinderGeometry(2.6, 2.6, 0.35, 24),
+      new THREE.MeshStandardMaterial({ color: 0xc9e9ff, transparent: true, opacity: 0.85, roughness: 0.3, metalness: 0.1 })
+    );
+    disc.position.set(t.x, baseY, t.z);
+    scene.add(disc);
+    var ring = new THREE.Mesh(
+      new THREE.TorusGeometry(2.6, 0.09, 8, 28),
+      new THREE.MeshStandardMaterial({ color: 0xffd94d, emissive: 0xffaa00, emissiveIntensity: 0.5, roughness: 0.3 })
+    );
+    ring.rotation.x = Math.PI / 2;
+    ring.position.set(t.x, baseY + 0.2, t.z);
+    scene.add(ring);
+    var arrow = makeArrow(0.95);
+    arrow.group.position.set(t.x, baseY + 2.9, t.z);
+    arrow.group.rotation.x = -Math.PI / 2;
+    scene.add(arrow.group);
+    var glow = new THREE.Sprite(
+      new THREE.SpriteMaterial({ map: makeGlowTexture(), color: new THREE.Color(t.accent || '#ffd94d'), transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending, depthWrite: false })
+    );
+    glow.scale.set(5, 5, 1);
+    glow.position.set(t.x, baseY + 0.9, t.z);
+    scene.add(glow);
+    arrows.push({ g: arrow.group, mat: arrow.mat, ph: Math.random() * Math.PI * 2, base: baseY + 2.9 });
+    window.elevators.push({ id: t.id, cx: t.x, cz: t.z, baseY: baseY, topY: topY, currentY: baseY, radius: 2.6, disc: disc, ring: ring, glow: glow, yaw: t.yaw });
+  }
+
+  function elevatorTop(id) {
+    for (var i = 0; i < window.elevators.length; i++) {
+      if (window.elevators[i].id === id) return window.elevators[i];
     }
-    return best;
+    return null;
   }
 
-  window.buildBridges = buildBridges;
-  window.bridgeFloor = bridgeFloor;
+  function surfaceHeight(x, z) {
+    for (var i = 0; i < window.elevators.length; i++) {
+      var ev = window.elevators[i];
+      if (Math.hypot(x - ev.cx, z - ev.cz) < ev.radius + 0.3) return ev.currentY;
+    }
+    for (var a = 0; a < appIslands.length; a++) {
+      var is = appIslands[a];
+      if (Math.hypot(x - is.app.x, z - is.app.z) < 3.6 * is.app.s) return is.baseY + 0.45;
+    }
+    if (Math.hypot(x, z) < 10.5) return DORM_Y + 0.45;
+    return null;
+  }
+
+  window.buildElevators = buildElevators;
+  window.elevatorTop = elevatorTop;
+  window.surfaceHeight = surfaceHeight;
   window.islandList = function () {
     var list = appIslands.map(function (is) {
       return { id: is.app.id, name: is.app.name, color: is.app.accent };
